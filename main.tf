@@ -3,8 +3,8 @@
 module "create_cluster_a" {
   source = "./modules/iks/"
 
-  app_name = "test"
-  cluster_name = "a"
+  app_name = "iks"
+  cluster_name = "ciscoliveterraform"
 
   dns_servers = var.dns_servers
   ntp_servers = var.ntp_servers
