@@ -5,7 +5,7 @@ terraform {
   required_providers {
     intersight = {
       source  = "CiscoDevNet/intersight"
-      version = ">= 1.0.0"
+      version = "== 1.0.0"
     }
   }
 }
@@ -70,31 +70,6 @@ resource "intersight_kubernetes_network_policy" "k8s_network" {
 
   pod_network_cidr = var.pod_network_cidr
   service_cidr = var.service_cidr
-
-  organization {
-    object_type = "organization.Organization"
-    moid        = data.intersight_organization_organization.organization.moid
-  }
-}
-
-#############################
-# CREATE K8S CONTAINER RUNTIME POLICY
-#############################
-resource "intersight_kubernetes_container_runtime_policy" "k8s_runtime" {
-
-  name = "${var.app_name}_${var.cluster_name}_k8s_runtime"
-
-  docker_http_proxy {
-    protocol = var.http_proxy_protocol
-    hostname = var.http_proxy_hostname
-    port = var.http_proxy_port
-  }
-
-  docker_https_proxy {
-    protocol = var.https_proxy_protocol
-    hostname = var.https_proxy_hostname
-    port = var.https_proxy_port
-  }
 
   organization {
     object_type = "organization.Organization"
@@ -256,11 +231,6 @@ resource "intersight_kubernetes_cluster_profile" "k8s_cluster" {
   net_config {
     moid = intersight_kubernetes_network_policy.k8s_network.moid
     object_type = "kubernetes.NetworkPolicy"
-  }
-
-  container_runtime_config {
-    moid = intersight_kubernetes_container_runtime_policy.k8s_runtime.moid
-    object_type = "kubernetes.ContainerRuntimePolicy"
   }
 
   organization {
